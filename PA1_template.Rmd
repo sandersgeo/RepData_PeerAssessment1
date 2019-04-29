@@ -8,11 +8,50 @@ output:
 
 ## Loading and preprocessing the data
 
+Here we load the file, unzip the file, and read the file into a dataframe. This produces a dataframe with columns *steps*, *date*, and *interval*.
+```{r}
+# Zip file name
+zfile <- "activity.zip"
+
+# Unzip file
+ufile <- unzip(zfile)
+
+# Read unzipped file to dataframe
+df <- read.csv(ufile, sep = ',', stringsAsFactors = FALSE, header = TRUE)
+
+# Return the first part of the dataframe object
+head(df)
+```
+
+We then transform the date fields from character to date objects.
+```{r}
+# Transform dates from character to date objects
+df$date <- as.Date(df$date)
+```
 
 
 ## What is mean total number of steps taken per day?
 
+We first calculate the daily steps.
+```{r}
+# Summarize daily steps
+dailySteps <- aggregate(steps ~ date, data = df, sum)
+```
 
+We then graph the daily counts with a bar chart (histogram) to see daily trends.
+```{r dailycount}
+library(ggplot2)
+ggplot(data = dailySteps, aes(date, steps)) + geom_bar(stat = "identity")
+```
+
+To understand daily averages, we calculate the mean and median daily steps.
+```{r}
+# Calculate the mean daily steps
+mean(dailySteps$steps)
+
+# Calculate the median daily steps
+median(dailySteps$steps)
+```
 
 ## What is the average daily activity pattern?
 
